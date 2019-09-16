@@ -1,19 +1,43 @@
+require('./config/env');
+var logNameSpace = 'app';
+var dlog = require('./lib/debuggers')('app');
+
+
+dlog.e('ERROR test');
+dlog.w('ERROR test');
+dlog.snh('ERROR test');
+dlog.td('ERROR test');
+dlog.init('ERROR test');
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const { mongoose } = require("./db.js");
+//initiates the database connection
+const { mongoose } = require("./config/database");
 
 const port = process.env.PORT_NJS_INVENTORY || 3000;
 const portAngular = process.env.PORT_NG_INVENTORY || 4200;
 
+const users = require('./routes/users');
+const userTypes = require('./routes/userTypes');
+
 var app = express();
 
+//app.use(cors({ origin: `http://localhost:${portAngular}` }));
+app.use(cors());
 app.use(bodyParser.json());
-// TODO_FA do we need to do this
+// TODO_FA_ do we need to do this
 //app.use(bodyParser.urlencoded({ extended: true }))
-//Saba is here making her first change
 
-app.use(cors({ origin: `http://localhost:${portAngular}` }));
 
-app.listen(port, () => console.log(`Server started at port : ${port}`));
+app.use('/users',users);
+app.use('/userTypes',userTypes);
+
+// Index Route
+app.get('/', (req,res) => {
+    res.send('_FA_ Iventory app backend root');
+})
+
+
+app.listen(port, () => dlog.init(`Server started at port : ${port}`));
