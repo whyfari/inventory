@@ -28,8 +28,8 @@ const UserSchema = schema({
     //TODO_FA uncomment required/unique
     email: {
         type: String,
-       // required: true,
-        //unique: true
+        required: true,
+        unique: true
     },
 
     password: {
@@ -44,9 +44,8 @@ const UserSchema = schema({
 
         // ref: 'UserType', // TODO_FA_ is this needed?
         validate: {
-            isAsync: true,
             validator: function(v) {
-                return FKValidator('UserType','_id', v);
+                return FKValidator('UserType','_id', v, true);
             },
             message: 'UserType does not exist' // TODO_FA_ doesn't get hit
         },
@@ -96,7 +95,7 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
     bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
         if (err) {
            dlog.e('bcrypt.compare threw error: ' + err);
-           // TODO_FA handle gracefully ... make sure neither field is empty
+           // TODO_FA handle gracefully ... make sure neither field is empty?
            // throw err;
            callback(err,null);
         } else {

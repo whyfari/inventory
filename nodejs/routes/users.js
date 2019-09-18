@@ -4,7 +4,7 @@ var dlog = require('../lib/debuggers')(logNameSpace);
 const express = require('express');
 const router = express.Router();
 //const passport = require('passport');
-//const jwt = require('jsonwebtoken');kkk
+//const jwt = require('jsonwebtoken');
 
 const config = require('../config/database');
 const User = require('../models/user');
@@ -13,8 +13,9 @@ const User = require('../models/user');
 
 // GET => localhost:<PORT>/user/
 router.get('/all', (req,res) => {
-  
+
   dlog.l('Processing GET all users');
+
   //User.find((err,docs) => {
   User.getUsers((err,docs) => {
     if (err) {

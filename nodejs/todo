@@ -1,0 +1,23 @@
+Error handling
+  what kind of errors should be passed back to front end?
+     db errors?
+     bcrypt errors?
+
+  what kind of erros shold be logged internally?
+
+    example:
+      sending an empy password to bcrypt > it complains about not having a hash
+  Specific: Error message was not being populated on the res even though it
+
+   wasn't empy in the router.post('authenticate') message
+
+DB
+   insureIndex
+      check all indexes are created before preceeding
+      confirm data integrity? non-unique values check?
+        if unique attribute was added later?
+
+
+
+
+

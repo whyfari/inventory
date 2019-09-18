@@ -2,9 +2,7 @@ var log = require('debug')('app:database')
 
 const mongoose = require('mongoose');
 mongoose.set('debug', true)
-
-// disable colors in debug mode
-//mongoose.set('debug', { color: false })
+mongoose.set('useCreateIndex', true);
 
 mongoose.connect('mongodb://localhost:27017/Inventory',{useNewUrlParser: true}, (err) => {
 

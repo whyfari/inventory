@@ -6,7 +6,6 @@ const router = express.Router();
 //const passport = require('passport');
 //const jwt = require('jsonwebtoken');
 
-const config = require('../config/database');
 const UserType = require('../models/userType');
 
 // localhost:<PORT>/userTypes/<...>
@@ -36,6 +35,7 @@ router.get('/all', (req,res) => {
 });
 
 // Register
+//TODO_FA confirm user dne, email unique should already work but jic?
 router.post('/add',(req,res,next) => {
 
     dlog.fb('POST /register userType func');

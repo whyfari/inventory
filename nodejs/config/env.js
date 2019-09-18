@@ -12,7 +12,7 @@ var disableExpress = '-*express*, ';
 var enableExpress = '*xpress*, ';
 var disableNodemon = '-*nodemon*,';
 
-var always = '*ERROR*, *WARNING*, *SHN*, *TODO_FA*, *WHY*, *INIT*, ';
+var always = '*ERROR*, *WARNING*, *SNH*, *TODO_FA*, *WHY*, *INIT*, ';
 var alwaysExp = always +  enableExpress;
 
 var def = alwaysExp +  '*log*, ';

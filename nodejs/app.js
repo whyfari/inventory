@@ -4,16 +4,16 @@ var dlog = require('./lib/debuggers')('app');
 
 
 dlog.e('ERROR test');
-dlog.w('ERROR test');
-dlog.snh('ERROR test');
-dlog.td('ERROR test');
-dlog.init('ERROR test');
+dlog.w('WARN test');
+dlog.snh('SNH test');
+dlog.td('TODO test');
+dlog.w('Why test');
+dlog.init('INIT test');
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-//initiates the database connection
 const { mongoose } = require("./config/database");
 
 const port = process.env.PORT_NJS_INVENTORY || 3000;
@@ -27,14 +27,10 @@ var app = express();
 //app.use(cors({ origin: `http://localhost:${portAngular}` }));
 app.use(cors());
 app.use(bodyParser.json());
-// TODO_FA_ do we need to do this
-//app.use(bodyParser.urlencoded({ extended: true }))
-
 
 app.use('/users',users);
 app.use('/userTypes',userTypes);
 
-// Index Route
 app.get('/', (req,res) => {
     res.send('_FA_ Iventory app backend root');
 })

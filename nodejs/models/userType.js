@@ -38,4 +38,3 @@ module.exports.addUserType = function(newUserType,callback){
     dlog.dbm('addUserType');
     newUserType.save(callback);
 }
-
