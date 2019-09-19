@@ -1,13 +1,13 @@
 require('./config/env');
 var logNameSpace = 'app';
-var dlog = require('./lib/debuggers')('app');
+var dlog = require('./lib/debuggers')(logNameSpace);
 
 
 dlog.e('ERROR test');
 dlog.w('WARN test');
 dlog.snh('SNH test');
 dlog.td('TODO test');
-dlog.w('Why test');
+dlog.why('Why test');
 dlog.init('INIT test');
 
 const express = require("express");
@@ -32,7 +32,7 @@ app.use('/users',users);
 app.use('/userTypes',userTypes);
 
 app.get('/', (req,res) => {
-    res.send('_FA_ Iventory app backend root');
+  res.send('_FA_ Iventory app backend root');
 })
 
 

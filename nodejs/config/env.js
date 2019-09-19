@@ -29,7 +29,7 @@ var customLevel = '-*user:*';
 //debug.enable( mostly);
 
 // enable all
-debug.enable('*');
+//debug.enable('*');
 
 // others
 //debug.enable( moreLevels);
@@ -41,3 +41,4 @@ debug.enable('*');
 
 
 //current
+debug.enable('* -*exp*');
