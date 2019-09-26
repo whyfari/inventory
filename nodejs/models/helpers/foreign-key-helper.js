@@ -19,9 +19,9 @@ module.exports = (fModelName, fFieldName, localFieldValue, shouldExist) => {
         }
         else {
           return reject(new Error(
-           '1 FK Constraint: foreign key look up failed for '+
-           `'${localFieldValue.toString()}'`));
-      	}
+            '1 FK Constraint: foreign key look up failed for '+
+            `'${localFieldValue.toString()}'`));
+        }
       });
     } else {
     // removing an object which is a foreign key for an existing ojbect
@@ -31,10 +31,10 @@ module.exports = (fModelName, fFieldName, localFieldValue, shouldExist) => {
         }
         else {
           return reject(new Error(
-           `1 FK Constraint: foreign key ' ${localFieldValue.toString()}'` +
-           'is being referenced'));
+            `1 FK Constraint: foreign key ' ${localFieldValue.toString()}'` +
+            'is being referenced'));
         }
-       });
+      });
     }
   });
 }

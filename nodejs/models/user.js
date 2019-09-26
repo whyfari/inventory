@@ -39,9 +39,11 @@ const UserSchema = schema({
       validator: function(v) {
         return FKValidator(consts.userType.model, consts.userType.fId, v,true);
       },
-      message: 'UserType does not exist' // TODO_FA_ doesn't get hit
+      // WHY doesn't get hit
+      message: 'UserType does not exist'
     },
-   errorMsg: 'UserType does not exist.' // TODO_FA_ doesn't get hit
+   // WHY doesn't get hit
+    errorMsg: 'UserType does not exist.'
   }
 });
 
@@ -84,7 +86,7 @@ module.exports.addUser = function(newUser,callback){
 }
 
 module.exports.comparePassword = function(candidatePassword, hash, callback) {
-  //TODO_FA_ remove this log ofc
+  //REMOVE remove this log ofc
   dlog.dbm('comparePassword: ' + candidatePassword + ' == hashed?: ' + hash);
   bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
     if (err) {
