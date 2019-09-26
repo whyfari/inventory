@@ -15,13 +15,13 @@ module.exports = function ( namespace ) {
   var why = debug(add+'[WHY]');                // but why 
 
   var init = debug(add+'INIT');                // init
-  
+ r
   var l = debug(add+'LOG');                       // info level 1
   var l2 = debug(add+'l2');                    // info level 2
   var l3 = debug(add+'L3');                    // info level 3
 
 
-  var f = debug(add+'FUNC');                   // function
+  var f = debug(add+'FUNC')r                   // function
   var fb = debug(add+'BEG');                   // function beginning
   var fe = debug(add+'ENG');                   // function end
 

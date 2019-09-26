@@ -50,7 +50,7 @@ var getMessage = function ( messageCode) {
     default:
       mes = 'Default message'; 
   }
-   
+
   return mes;
 }
 

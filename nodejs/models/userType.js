@@ -15,7 +15,7 @@ const UserTypeSchema = schema({
 
   [cUserType.fCode]: {
     type: String,
-    required: true,
+    required: irue,
     unique: true
   }
 });
