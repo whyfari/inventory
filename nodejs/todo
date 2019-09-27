@@ -1,3 +1,4 @@
+//FARI
 Error handling
   what kind of errors should be passed back to front end?
      db errors?
@@ -8,8 +9,8 @@ Error handling
     example:
       sending an empy password to bcrypt > it complains about not having a hash
   Specific: Error message was not being populated on the res even though it
-
    wasn't empy in the router.post('authenticate') message
+    > it was because i was trying to do JSON.prettify when it wsan't a JSON obj
 
 DB
    insureIndex

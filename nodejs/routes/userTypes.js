@@ -18,7 +18,7 @@ router.get('/all', (req,res) => {
   UserType.getUserTypes((err,docs) => {
     if (err) {
       dlog.db('GET error while getting all userTypes' +
-               JSON.stringify(err,undefined,2));
+                err);
       res.json({success: false,
         msg: '_FA_ Failed to get all userTypes',
         message : err})
@@ -50,7 +50,7 @@ router.post('/add',(req,res,next) => {
     if (err) {
 
       dlog.e('POST Error in adding new userType' +
-        JSON.stringify(err,undefined,2));
+        err);
 
         res.json({success: false,
           msg: 'Failed to register userType',
@@ -58,8 +58,8 @@ router.post('/add',(req,res,next) => {
 
     } else {
 
-      dlog.l2('POST new userType added:' + 
-               JSON.stringify(doc));
+      dlog.l2('POST new userType added:' +
+                JSON.stringify(doc));
 
       res.json({success: true,
                 msg: '_FA_ UserType registed',
@@ -69,7 +69,7 @@ router.post('/add',(req,res,next) => {
 })
 
 
-// Profile 
+// Profile
 //router.get('/profile',passport.authenticate('jwt', {session: false}), (req,res,next) => {
 //  res.json({userType: req.userType});
 //});

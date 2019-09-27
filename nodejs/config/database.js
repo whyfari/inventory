@@ -1,15 +1,22 @@
-var dlog = require('../lib/debuggers')('database') 
+var dlog = require('../lib/debuggers')('database')
+var cDb= require('../constants/dbConsts').db
+var cMes= require('../constants/').mes
 
 const mongoose = require('mongoose');
+
 mongoose.set('debug', true)
 mongoose.set('useCreateIndex', true);
 
-mongoose.connect('mongodb://localhost:27017/inventory',{useNewUrlParser: true}, (err) => {
+var connStr = `${cDb.db}://${cDb.host}:${cDb.port}/${cDb.dbName}`;
 
-   if ( !err )
-      dlog.init('MongoDB connection succeeded');
-   else
-      dlog.init('Error in DB connection: ' + JSON.stringify(err, undefined, 2));
+mongoose.connect( connStr,
+                  {useNewUrlParser: true},
+                  (err) => {
+   if ( !err ) {
+      dlog.init(cMes.mText(cMes.mCode.DB_CONN_SUCC, err));
+   } else {
+      dlog.init(cMes.mText(cMes.mCode.DB_CONN_FAIL, err));
+   }
 });
 
 module.exports = mongoose;

@@ -1,0 +1,26 @@
+// INFO need an empty line after the POST * line and before the {} for the JSON message
+
+GET http://172.23.58.126:3000/users/all
+
+###
+GET http://172.23.58.126:3000/usertypes/all
+
+###
+POST http://172.23.58.126:3000/usertypes/add HTTP/1.1
+content-type: application/json
+
+{
+  "code": "A",
+  "desc": "test ..."
+}
+
+###
+POST http://172.23.58.126:3000/users/register
+content-type: application/json
+
+{
+  "name": "fari",
+  "email": "whyfari@gmail.com",
+  "password": "a",
+  "userType_id" : "5d8d164cd4dd1713e5ff7bbd"
+}

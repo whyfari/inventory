@@ -7,5 +7,7 @@
 			"path": "/home/fari/code/inventory"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "nodejs"
+	}
 }

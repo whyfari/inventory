@@ -15,7 +15,7 @@ const UserTypeSchema = schema({
 
   [cUserType.fCode]: {
     type: String,
-    required: irue,
+    required: true,
     unique: true
   }
 });
@@ -26,8 +26,9 @@ const UserType = module.exports = mongoose.model(cUserType.model,
 
 module.exports.getUserTypes = function (callback) {
   dlog.dbm('findUserTypes');
-  UserType.find((callback)); 
+  UserType.find((callback));
 }
+
 
 module.exports.getUserTypeById = function (id, callback) {
   dlog.dbm('getUserTypeById');

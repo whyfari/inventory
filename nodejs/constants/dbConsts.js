@@ -1,3 +1,10 @@
+const db = {
+  db: "mongodb",
+  dbName: "inv",
+  port: 27017,
+  host: "localhost"
+}
+
 // default id field
 const fId = '_id';
 
@@ -7,7 +14,7 @@ const userType = {
   coll: 'userTypes',   // collection name
   fId: fId,            // field id name (default)
   fCode: 'code',       // field code name
-  fDesc: 'description'
+  fDesc: 'desc'
 }
 
 const user = {
@@ -21,4 +28,4 @@ const user = {
 }
 
 
-module.exports = { fId, user, userType};
+module.exports = { db, fId, user, userType};

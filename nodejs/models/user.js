@@ -48,12 +48,12 @@ const UserSchema = schema({
 });
 
 const User = module.exports = mongoose.model(cUser.model,
-                                             UserSchema,
-                                             cUser.coll);
+                                              UserSchema,
+                                              cUser.coll);
 
 module.exports.getUsers = function (callback) {
   dlog.fb('_FA_ finding all user in model method');
-  User.find((callback)); 
+  User.find((callback));
 }
 
 module.exports.getUserById = function (id, callback) {
@@ -62,10 +62,17 @@ module.exports.getUserById = function (id, callback) {
 
 //TODO_FA this should only return one record since email should be unique
 module.exports.getUserByEmail = function (email, callback) {
-  User.findOne({email: email},callback);
+  dlog.fb('getUserByEmail');
+  User.findOne({[cUser.fEmail] : email},callback);
+}
+
+module.exports.getUserById = function (id, callback) {
+  dlog.fb('getUserById');
+  User.findOne({[cUser.fId] : id},callback);
 }
 
 module.exports.addUser = function(newUser,callback){
+  dlog.fb('addUser');
   dlog.dbm('AddUser ...: email: ' + newUser[cUser.fEmail]+ ' pass: ' + newUser[cUser.fPassword]);
 
   //TODO_FA are we covering all return cases?

@@ -3,6 +3,7 @@ var dlog = require('../lib/debuggers')(logNameSpace);
 var log = require('../lib/log');
 var cUser = require('../constants/dbConsts').user;
 var cMess = require('../constants/messages.js');
+var f = require('../lib/helperFunc');
 
 const express = require('express');
 const router = express.Router();
@@ -22,20 +23,27 @@ router.get('/all', (req,res) => {
 
   User.getUsers((err,docs) => {
     if (err) {
-      msg = cMess.getMessage(cMess.cMessCode.LOOKUP_FAIL, cUser.coll);
+      msg = cMess.mText(cMess.mCode.READ_ERR, cUser.coll);
       dlog.db3(msg);
-      dlog.e(log.js(err));
+      dlog.e(err);
 
       res.json({success: false,
                 msg: msg,
                 errMsg: err})
     }
     else {
-      msg = cMess.getMessage(cMess.cMessCode.LOOKUP_SUCCESS, cUser.coll);
+      var len = f.jsLen(docs);
+      if ( f.jsIsEmtpy(docs, len ) ) {
+        msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll);
+      } else {
+        msg = cMess.mText(cMess.mCode.READ_SUCC, cUser.coll);
+      }
+
       dlog.db3(msg);
       dlog.db3(log.js(docs));
       res.json({success: true,
-                msg: msg, 
+                msg: msg,
+                count: len,
                 docs: docs})
     }
   });
@@ -55,25 +63,25 @@ router.post('/register',(req,res,next) => {
 
   User.addUser(newUser,(err, doc) => {
     if (err) {
-      msg = cMess.getMessage(cMess.cMessCode.ADD_FAIL, cUser.coll);
+      msg = cMess.mText(cMess.mCode.CR_ERR, cUser.coll);
       dlog.db3(msg);
-      dlog.e(log.js(err));
+      dlog.e(err);
 
       res.json({success: false,
                 msg: msg,
                 errMsg: err})
     } else {
-      msg = cMess.getMessage(cMess.cMessCode.ADD_SUCCESS, cUser.coll);
+      msg = cMess.mText(cMess.mCode.CR_SUCC, cUser.coll);
       dlog.db3(msg);
       dlog.l2(log.js(doc));
       res.json({success: true,
-                msg: msg, 
+                msg: msg,
                 doc: doc})
     }
   });
 })
 
-// Authenticate 
+// Authenticate
 router.post('/authenticate',(req,res,next) => {
   dlog.http('/authenticate');
   dlog.http2(log.js(req.body));
@@ -81,24 +89,22 @@ router.post('/authenticate',(req,res,next) => {
   const fEmail= req.body[cUser.fEmail];
   const fPassword = req.body[cUser.fPassword];
 
-
-  //User.getUserByUsername(username, (err,user) => {
   User.getUserByEmail(fEmail, (err,user) => {
     if (err) {
-      msg = cMess.getMessage(cMess.cMessCode.LOOKUP_FAIL, cUser.coll, cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll, cUser.fEmail);
       dlog.db3(msg);
-      dlog.e(log.js(err));
+      dlog.e(err);
 
       res.json({success: false,
                 msg: msg,
                 errMsg: err})
     }
     else if (!user) {
-      msg = cMess.getMessage(cMess.cMessCode.LOOKUP_FAIL, cUser.coll, cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll, cUser.fEmail);
       dlog.db2(msg);
 
-      msg = cMess.getMessage(cMess.cMessCode.INCORRECT_CREDENTIALS,
-                             cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.INCORRECT_CREDENTIALS,
+                              cUser.fEmail);
       dlog.db2(msg);
 
       res.json({success: false,
@@ -111,7 +117,7 @@ router.post('/authenticate',(req,res,next) => {
           // messes it up
           // test by providing no password
           //TODO_FA err is not getting populated in the res msg below
-          msg = cMess.getMessage(cMess.cMessCode.COMPARE_PASSWORD_ERR, err);
+          msg = cMess.mText(cMess.mCode.CMP_PASS_ERR, err);
           dlog.w(msg);
           dlog.e(err);
 
@@ -130,25 +136,25 @@ router.post('/authenticate',(req,res,next) => {
          //   name: user.name,
          //   email: user.email
          //   }
-          msg = cMess.getMessage(cMess.cMessCode.CORRECT_CREDENTIALS,
-                                 cUser.coll);
+          msg = cMess.mText(cMess.mCode.CORRECT_CREDENTIALS,
+                                  cUser.coll);
           dlog.db2(msg);
           res.json({success: true,
                     msg: msg,
-                    doc: user}); 
+                    doc: user});
           } else {
-             msg = cMess.getMessage(cMess.cMessCode.INCORRECT_CREDENTIALS,
+            msg = cMess.mText(cMess.mCode.INCORRECT_CREDENTIALS,
                                     cUser.fPassword);
-             res.json({success: false,
-                       msg: msg,
-                       errMsg: ""})
+            res.json({success: false,
+                      msg: msg,
+                      errMsg: ""})
         }
       })
     }
   });
 });
 
-// Profile 
+// Profile
 //router.get('/profile',passport.authenticate('jwt', {session: false}), (req,res,next) => {
 //  res.json({user: req.user});
 //});

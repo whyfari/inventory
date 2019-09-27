@@ -1,59 +1,97 @@
+let logNameSpace = 'messages';
+var dlog = require('../lib/debuggers')(logNameSpace);
 
-const cMessCode = {
+const mCode = {
 
-  LOOKUP_SUCCESS :          1, 
-  LOOKUP_FAIL :             2,
-  LOOKUP_ERROR:             3,
-  DELETE_SUCCESS :          4,
-  DELETE_FAIL :             5,
-  DELETE_ERROR:             6,
-  ADD_SUCCESS :             7,
-  ADD_FAIL:                 8,
-  COMPARE_PASSWORD_ERR:     9,
-  INCORRECT_CREDENTIALS:    10,
-  CORRECT_CREDENTIALS:      11,
+// 1-20    high-level
+// 20 - 60  data-base
+// 60 - 100
+
+  SERVER_START:            1,
+  DB_CONN_SUCC:            2,
+  DB_CONN_FAIL:            3,
+  ROOT_ROUTE:              4,
+
+  READ_SUCC :              20,
+  READ_FAIL :              21,
+  READ_ERR:                22,
+  DEL_SUCC :               24,
+  DEL_FAIL :               25,
+  DEL_ERR:                 26,
+  CR_SUCC :                27,
+  CR_FAIL:                 28,
+  CR_ERR:                  29,
+
+  CMP_PASS_ERR:            61,
+  CRED_FAIL:               62,
+  CRED_SUCC:               63,
 }
 
-module.exports = cMessCode;
+module.exports = mCode;
 
+var mText = function ( messageCode) {
 
-var getMessage = function ( messageCode) {
   var mes = '';
   switch(messageCode) {
-    case cMessCode.LOOKUP_SUCCESS:
-      mes = 'Look up sucessfull on table \'' + arguments[1] + '\'';
-      if ( arguments[2] != '' ) {
-        mes += ' criteria: \'' + arguments[2] + '\''; 
+
+    case mCode.SERVER_START:
+      mes = 'Server started at port: \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.DB_CONN_SUCC:
+      mes = 'Database connection succecceded';
+      break;
+
+    case mCode.DB_CONN_FAIL:
+      mes = 'Database connection failed, error: \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.READ_SUCC:
+      mes = 'Found record(s) on table \'' + arguments[1] + '\'';
+      if ( arguments[2] != undefined ) {
+        mes += ' criteria: \'' + arguments[2] + '\'';
       }
       break;
-    case cMessCode.LOOKUP_FAIL:
-      mes = 'Look up fail on table \'' + arguments[1] + '\''; 
-      if ( arguments[2] != '' ) {
-        mes += ' criteria: \'' + arguments[2] + '\''; 
+
+    case mCode.READ_FAIL:
+      mes = 'Failed to find record(s) on table \'' + arguments[1] + '\'';
+      if ( arguments[2] != undefined ) {
+        mes += ' criteria: \'' + arguments[2] + '\'';
       }
       break;
-    case cMessCode.ADD_SUCCESS:
-      mes = 'Record add sucessful on table \'' + arguments[1] + '\''; 
+
+    case mCode.CR_SUCC:
+      mes = 'Record added on table \'' + arguments[1] + '\'';
       break;
-    case cMessCode.ADD_FAIL:
-      mes = 'Record add fail on table \'' + arguments[1] + '\''; 
+
+    case mCode.CR_FAIL:
+      mes = 'Failed to add record on table \'' + arguments[1] + '\'';
       break;
-    case cMessCode.COMPARE_PASSWORD_ERR:
+
+    case mCode.CR_ERR:
+      mes = 'Error while adding record on table \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.CMP_PASS_ERR:
       mes = 'Bcrypt password compare error\'' + arguments[1] + '\'';
       break;
-    case cMessCode.INCORRECT_CREDENTIALS:
+
+    case mCode.CRED_FAIL:
       mes = 'Incorrect \'' + arguments[1] + '\'';
       break;
-    case cMessCode.CORRECT_CREDENTIALS:
+
+    case mCode.CRED_SUCC:
       mes = 'Correct credentials'
       break;
+
     default:
-      mes = 'Default message'; 
+      dlog.snh('Default message being printed');
+      mes = 'Default message';
   }
 
   return mes;
 }
 
 module.exports = {
-  cMessCode, getMessage
+  mCode, mText
 }

@@ -1,6 +1,8 @@
 require('./config/env');
 var logNameSpace = 'app';
 var dlog = require('./lib/debuggers')(logNameSpace);
+var cMes= require('./constants').mes;
+var cApp= require('./constants').consts.app;
 
 
 dlog.e('ERROR test');
@@ -15,9 +17,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const { mongoose } = require("./config/database");
-
-const port = process.env.PORT_NJS_INVENTORY || 3000;
-const portAngular = process.env.PORT_NG_INVENTORY || 4200;
 
 const users = require('./routes/users');
 const userTypes = require('./routes/userTypes');
@@ -36,4 +35,8 @@ app.get('/', (req,res) => {
 })
 
 
-app.listen(port, () => dlog.init(`Server started at port : ${port}`));
+app.listen(cApp.port, () => {
+  dlog.init(cMes.mText(
+              cMes.mCode.SERVER_START,
+              cApp.port));
+  });
