@@ -1,6 +1,10 @@
 var logNameSpace = 'R.userTypes';
 var dlog = require('../lib/debuggers')(logNameSpace);
-var cUserType = require('../constants/dbConsts').userType;
+var log = require('../lib/log');
+var f = require('../lib/helperFunc');
+var cDb= require('../constants/dbConsts');
+var cThis = cDb.userType;
+var cMess = require('../constants/messages.js');
 
 const express = require('express');
 const router = express.Router();
@@ -13,56 +17,66 @@ const UserType = require('../models/userType');
 
 // GET => localhost:<PORT>/userTypes/
 router.get('/all', (req,res) => {
-  dlog.http(req.method + ' ' + req.url);
+  dlog.http(req.method + ' ' + req.originalUrl);
 
-  UserType.getUserTypes((err,docs) => {
+  UserType.getAll((err,docs) => {
     if (err) {
-      dlog.db('GET error while getting all userTypes' +
-                err);
+      msg = cMess.mText(cMess.mCode.READ_ERR, cThis.coll);
+      dlog.db3(msg);
+      dlog.e(err);
+
       res.json({success: false,
-        msg: '_FA_ Failed to get all userTypes',
-        message : err})
+                msg: msg,
+                errMsg: err})
     }
     else {
-      dlog.db('GET got all userTypes');
-      dlog.db2(JSON.stringify(docs, null, 2));
+      var len = f.jsLen(docs);
+      if ( f.jsIsEmpty(docs, len ) ) {
+        msg = cMess.mText(cMess.mCode.READ_NONE, cThis.coll);
+      } else {
+        msg = cMess.mText(cMess.mCode.READ_SUCC, cThis.coll);
+      }
+
+      dlog.db3(msg);
+      dlog.db3(log.js(docs));
       res.json({success: true,
-                msg: '_FA_ got all userTypes',
+                msg: msg,
+                count: len,
                 docs: docs})
     }
-    });
+  });
 });
 
 // Register
 //TODO_FA confirm user dne, email unique should already work but jic?
 router.post('/add',(req,res,next) => {
+  dlog.http(req.method + ' ' + req.originalUrl);
   dlog.http(req.method + ' ' + req.url);
+  dlog.http2('body: ' + log.js(req.body));
 
   fCode = 'code';
 
   let newUserType = new UserType({
-    [cUserType.fCode] : req.body[cUserType.fCode],
-    [cUserType.fDesc] : req.body[cUserType.fDesc]
+    [cThis.fCode] : req.body[cThis.fCode],
+    [cThis.fDesc] : req.body[cThis.fDesc]
   });
 
-  UserType.addUserType(newUserType,(err, doc) => {
-
+  UserType.add(newUserType,(err, doc) => {
     if (err) {
 
-      dlog.e('POST Error in adding new userType' +
-        err);
+      msg = f.getErrorMessage(err, cThis);
+      dlog.db3(msg);
+      dlog.e(err);
 
-        res.json({success: false,
-          msg: 'Failed to register userType',
-          message : err})
-
+      res.json({success: false,
+                msg: msg,
+                errMsg: err})
     } else {
-
-      dlog.l2('POST new userType added:' +
-                JSON.stringify(doc));
-
+      msg = cMess.mText(cMess.mCode.CR_SUCC, cThis.coll);
+      dlog.db3(msg);
+      dlog.l2(log.js(doc));
       res.json({success: true,
-                msg: '_FA_ UserType registed',
+                msg: msg,
                 doc: doc})
     }
   });

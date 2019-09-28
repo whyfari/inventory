@@ -5,6 +5,12 @@ const db = {
   host: "localhost"
 }
 
+const errors = {
+  eMongoError : 'MongoError',
+  eValidationError: 'ValidationError',
+  eCodeDuplicate : 11000
+}
+
 // default id field
 const fId = '_id';
 
@@ -27,5 +33,4 @@ const user = {
   fUserType_id: 'userType_id'
 }
 
-
-module.exports = { db, fId, user, userType};
+module.exports = { db, errors, fId, user, userType};

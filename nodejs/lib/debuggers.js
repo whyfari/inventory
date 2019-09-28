@@ -10,7 +10,7 @@ module.exports = function ( namespace ) {
 
   var f = debug(add+'[FARI]');                 // FARI
   var e = debug(add+'[ERROR]');                // error
-  var w = debug(add+'[WARN');                  // warning
+  var w = debug(add+'[WARN]');                 // warning
   var snh = debug(add+'[SNH]');                // SNH
   var td = debug(add+'[TODO_FA_]');            // TODO_FA_
   var why = debug(add+'[WHY]');                // WHY

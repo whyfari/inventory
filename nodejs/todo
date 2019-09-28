@@ -1,20 +1,30 @@
 //FARI
+App crashes if body has incorrect JSON
+      body-parser:json parse json +1ms
+      finalhandler default 400 +0ms
+    SyntaxError: Unexpected token } in JSON at position 53
+        at JSON.parse (<anonymous>)
+        at parse (/home/fari/code/inventory/nodejs/node_modules/body-parser/lib/types/json.js:89:19)
+
+Logging
+  Don't send back full doc, it has hashed password
+
 Error handling
   what kind of errors should be passed back to front end?
      db errors?
      bcrypt errors?
 
-  what kind of erros shold be logged internally?
+  what kind of errors should be logged internally?
 
     example:
-      sending an empy password to bcrypt > it complains about not having a hash
+      sending an empty password to bcrypt > it complains about not having a hash
   Specific: Error message was not being populated on the res even though it
-   wasn't empy in the router.post('authenticate') message
-    > it was because i was trying to do JSON.prettify when it wsan't a JSON obj
+   wasn't empty in the router.post('authenticate') message
+    > it was because i was trying to do JSON.prettify when it wasn't a JSON obj
 
 DB
    insureIndex
-      check all indexes are created before preceeding
+      check all indexes are created before preceding
       confirm data integrity? non-unique values check?
         if unique attribute was added later?
 

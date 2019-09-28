@@ -1,6 +1,6 @@
 var logNameSpace = 'M.userTypes';
 var dlog = require('../lib/debuggers')(logNameSpace);
-var cUserType = require('../constants/dbConsts').userType;
+var cThis = require('../constants/dbConsts').userType;
 
 const mongoose = require('mongoose');
 
@@ -8,34 +8,34 @@ const schema = mongoose.Schema;
 
 const UserTypeSchema = schema({
 
-  [cUserType.fDesc]: {
+  [cThis.fDesc]: {
     type: String,
     default: "Basic end user"
   },
 
-  [cUserType.fCode]: {
+  [cThis.fCode]: {
     type: String,
     required: true,
     unique: true
   }
 });
 
-const UserType = module.exports = mongoose.model(cUserType.model,
+const UserType = module.exports = mongoose.model(cThis.model,
                                                   UserTypeSchema,
-                                                  cUserType.coll);
+                                                  cThis.coll);
 
-module.exports.getUserTypes = function (callback) {
+module.exports.getAll = function (callback) {
   dlog.dbm('findUserTypes');
   UserType.find((callback));
 }
 
 
-module.exports.getUserTypeById = function (id, callback) {
+module.exports.getById = function (id, callback) {
   dlog.dbm('getUserTypeById');
   UserType.findById(id,callback);
 }
 
-module.exports.addUserType = function(newUserType,callback){
+module.exports.add = function(newUserType,callback){
   dlog.dbm('addUserType');
   newUserType.save(callback);
 }

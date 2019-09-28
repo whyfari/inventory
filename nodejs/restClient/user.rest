@@ -1,26 +1,41 @@
 // INFO need an empty line after the POST * line and before the {} for the JSON message
-
-GET http://172.23.58.126:3000/users/all
+@hostname = {{$processEnv HOST_NJS_INVENTORY }}
+@port = {{$processEnv PORT_NJS_INVENTORY }}
+@host = {{hostname}}:{{port}}
+@contentType = application/json
 
 ###
-GET http://172.23.58.126:3000/usertypes/all
+GET http://{{host}}/usertypes/all
 
 ###
-POST http://172.23.58.126:3000/usertypes/add HTTP/1.1
-content-type: application/json
+POST http://{{host}}/usertypes/add HTTP/1.1
+content-type: {{contentType}}
 
 {
-  "code": "A",
-  "desc": "test ..."
+  "code": "ADIN",
+  "desc": " ..."
 }
 
 ###
-POST http://172.23.58.126:3000/users/register
-content-type: application/json
+GET http://{{host}}/users/all
+
+
+###
+POST http://{{host}}/users/register
+content-type: {{contentType}}
 
 {
   "name": "fari",
   "email": "whyfari@gmail.com",
   "password": "a",
-  "userType_id" : "5d8d164cd4dd1713e5ff7bbd"
+  "userType_id" : "5d8f6fc6ac2eb713d1b48d0d"
+}
+
+###
+POST http://{{host}}/users/auth
+content-type: {{contentType}}
+
+{
+  "email": "whyfari@gmail.com",
+  "password": "a"
 }

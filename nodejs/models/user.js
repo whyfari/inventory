@@ -8,30 +8,30 @@ const bcrypt = require('bcrypt');
 const schema = mongoose.Schema;
 
 const consts= require('../constants/dbConsts');
-const cUser = consts.user;
+const cThis = consts.user;
 
 //TODO_FA change to 10
 const saltWorkFactor = 1;
 
 const UserSchema = schema({
 
-  [cUser.fName]: {
+  [cThis.fName]: {
     type: String,
     required: true,
   },
 
-  [cUser.fEmail]: {
+  [cThis.fEmail]: {
     type: String,
     required: true,
     unique: true
   },
 
-  [cUser.fPassword]: {
+  [cThis.fPassword]: {
     type: String,
     required: true
   },
 
-  [cUser.fUserType_id]: {
+  [cThis.fUserType_id]: {
     type: schema.ObjectId,
     required: true,
 
@@ -47,45 +47,41 @@ const UserSchema = schema({
   }
 });
 
-const User = module.exports = mongoose.model(cUser.model,
+const User = module.exports = mongoose.model(cThis.model,
                                               UserSchema,
-                                              cUser.coll);
+                                              cThis.coll);
 
-module.exports.getUsers = function (callback) {
-  dlog.fb('_FA_ finding all user in model method');
+module.exports.getAll = function (callback) {
+  dlog.fb('getAll');
   User.find((callback));
 }
 
-module.exports.getUserById = function (id, callback) {
+module.exports.getById = function (id, callback) {
+  dlog.fb('getById');
   User.findById(id,callback);
 }
 
 //TODO_FA this should only return one record since email should be unique
-module.exports.getUserByEmail = function (email, callback) {
-  dlog.fb('getUserByEmail');
-  User.findOne({[cUser.fEmail] : email},callback);
+module.exports.getByEmail = function (email, callback) {
+  dlog.fb('getByEmail');
+  User.findOne({[cThis.fEmail] : email},callback);
 }
 
-module.exports.getUserById = function (id, callback) {
-  dlog.fb('getUserById');
-  User.findOne({[cUser.fId] : id},callback);
-}
-
-module.exports.addUser = function(newUser,callback){
-  dlog.fb('addUser');
-  dlog.dbm('AddUser ...: email: ' + newUser[cUser.fEmail]+ ' pass: ' + newUser[cUser.fPassword]);
+module.exports.add = function(newUser,callback){
+  dlog.fb('add');
+  dlog.dbm('add ...: email: ' + newUser[cThis.fEmail]+ ' pass: ' + newUser[cThis.fPassword]);
 
   //TODO_FA are we covering all return cases?
   // TODO_FA 'err' waksn't printed by the callback function eventhough
   // i did see it in this log. test by not sending a password
   bcrypt.genSalt(saltWorkFactor, (err,salt) => {
-    bcrypt.hash(newUser[cUser.fPassword], salt, (err, hash) => {
+    bcrypt.hash(newUser[cThis.fPassword], salt, (err, hash) => {
       if (err) {
         dlog.e('Error while hashing password: ' + err);
         callback(err)
       } else {
-        newUser[cUser.fPassword]= hash;
-        dlog.l3('hashed pass: ' + newUser[cUser.fPassword]);
+        newUser[cThis.fPassword]= hash;
+        dlog.l3('hashed pass: ' + newUser[cThis.fPassword]);
         newUser.save(callback);
       }
     });

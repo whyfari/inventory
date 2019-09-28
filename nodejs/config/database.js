@@ -13,7 +13,7 @@ mongoose.connect( connStr,
                   {useNewUrlParser: true},
                   (err) => {
    if ( !err ) {
-      dlog.init(cMes.mText(cMes.mCode.DB_CONN_SUCC, err));
+      dlog.init(cMes.mText(cMes.mCode.DB_CONN_SUCC, connStr));
    } else {
       dlog.init(cMes.mText(cMes.mCode.DB_CONN_FAIL, err));
    }

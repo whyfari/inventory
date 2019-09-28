@@ -1,5 +1,5 @@
 process.env.PORT_NJS_INVENTORY = 3000;
-
+process.env.HOST_NJS_INVENTORY = '172.23.59.158';
 
 // set debugging levels using env variables ... not working
 //process.env.DEBUG= '*-R.userTypes:db, -nodemon*, -express*';
@@ -9,7 +9,7 @@ process.env.PORT_NJS_INVENTORY = 3000;
 var debug = require('debug');
 
 var disableExpress = '-*express*, ';
-var enableExpress = '*xpress*, ';
+var enableExpress = '*express*, ';
 var disableNodemon = '-*nodemon*,';
 
 var always = '*ERROR*, *WARNING*, *SNH*, *TODO_FA*, *WHY*, *INIT*, ';
@@ -21,7 +21,7 @@ var defNoExp = always +  '*log*, ';
 var moreLevels = def +  '*db, ' + '*http';
 var moreLevelsNoExp = defNoExp +  '*db, ' + '*http';
 
-var customLevel = '-*user:*'; 
+var customLevel = '-*user:*';
 
 
 // disable (almost) all
@@ -37,8 +37,8 @@ var customLevel = '-*user:*';
 //debug.enable( customLevel);
 
 // default
-//debug.enable(def);
+debug.enable(def);
 
 
 //current
-debug.enable('* -*exp*');
+//debug.enable('* -*exp*');

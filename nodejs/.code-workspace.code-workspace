@@ -8,6 +8,12 @@
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "nodejs"
+		"liveServer.settings.multiRootWorkspaceName": "nodejs",
+		"cSpell.words": [
+			"consts",
+			"dlog",
+			"read",
+			"succ"
+		]
 	}
 }

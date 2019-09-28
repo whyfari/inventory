@@ -1,5 +1,6 @@
 let logNameSpace = 'messages';
 var dlog = require('../lib/debuggers')(logNameSpace);
+var cDb = require('./dbConsts');
 
 const mCode = {
 
@@ -15,12 +16,16 @@ const mCode = {
   READ_SUCC :              20,
   READ_FAIL :              21,
   READ_ERR:                22,
+  READ_NONE:               23,
+
   DEL_SUCC :               24,
   DEL_FAIL :               25,
   DEL_ERR:                 26,
   CR_SUCC :                27,
   CR_FAIL:                 28,
   CR_ERR:                  29,
+  ERR_DB_DUP:              30,
+  ERR_DB_VALIDATE:         31,
 
   CMP_PASS_ERR:            61,
   CRED_FAIL:               62,
@@ -39,7 +44,7 @@ var mText = function ( messageCode) {
       break;
 
     case mCode.DB_CONN_SUCC:
-      mes = 'Database connection succecceded';
+      mes = 'Database connection succeeded on \'' + arguments[1] + '\'';
       break;
 
     case mCode.DB_CONN_FAIL:
@@ -48,6 +53,13 @@ var mText = function ( messageCode) {
 
     case mCode.READ_SUCC:
       mes = 'Found record(s) on table \'' + arguments[1] + '\'';
+      if ( arguments[2] != undefined ) {
+        mes += ' criteria: \'' + arguments[2] + '\'';
+      }
+      break;
+
+    case mCode.READ_NONE:
+      mes = 'Found no matching record(s) on table \'' + arguments[1] + '\'';
       if ( arguments[2] != undefined ) {
         mes += ' criteria: \'' + arguments[2] + '\'';
       }
@@ -72,8 +84,17 @@ var mText = function ( messageCode) {
       mes = 'Error while adding record on table \'' + arguments[1] + '\'';
       break;
 
+    case mCode.ERR_DB_DUP:
+      mes = 'Duplicate record error on  table \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.ER_DB_VALIDATE:
+      mes = 'Got a \'' + cDb.errors.eValidationError + '\' error on table \'' +
+        arguments[1] + '\'';
+      break;
+
     case mCode.CMP_PASS_ERR:
-      mes = 'Bcrypt password compare error\'' + arguments[1] + '\'';
+      mes = 'Bcrypt password compare error: \'' + arguments[1] + '\'';
       break;
 
     case mCode.CRED_FAIL:

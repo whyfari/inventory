@@ -1,7 +1,8 @@
 let logNameSpace = 'R.users';
 var dlog = require('../lib/debuggers')(logNameSpace);
 var log = require('../lib/log');
-var cUser = require('../constants/dbConsts').user;
+var cDb= require('../constants/dbConsts');
+var cThis = cDb.user;
 var cMess = require('../constants/messages.js');
 var f = require('../lib/helperFunc');
 
@@ -18,12 +19,11 @@ var msg = '';
 
 // GET => localhost:<PORT>/user/
 router.get('/all', (req,res) => {
+  dlog.http(req.method + ' ' + req.originalUrl);
 
-  dlog.http('/all');
-
-  User.getUsers((err,docs) => {
+  User.getAll((err,docs) => {
     if (err) {
-      msg = cMess.mText(cMess.mCode.READ_ERR, cUser.coll);
+      msg = cMess.mText(cMess.mCode.READ_ERR, cThis.coll);
       dlog.db3(msg);
       dlog.e(err);
 
@@ -33,10 +33,10 @@ router.get('/all', (req,res) => {
     }
     else {
       var len = f.jsLen(docs);
-      if ( f.jsIsEmtpy(docs, len ) ) {
-        msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll);
+      if ( f.jsIsEmpty(docs, len ) ) {
+        msg = cMess.mText(cMess.mCode.READ_NONE, cThis.coll);
       } else {
-        msg = cMess.mText(cMess.mCode.READ_SUCC, cUser.coll);
+        msg = cMess.mText(cMess.mCode.READ_SUCC, cThis.coll);
       }
 
       dlog.db3(msg);
@@ -51,27 +51,30 @@ router.get('/all', (req,res) => {
 
 // Register
 router.post('/register',(req,res,next) => {
-  dlog.http('/register');
-  dlog.http2(log.js(req.body));
+  dlog.http(req.method + ' ' + req.originalUrl);
+  dlog.http2('body: '+ log.js(req.body));
 
   let newUser = new User({
-    [cUser.fName] : req.body[cUser.fName],
-    [cUser.fEmail] : req.body[cUser.fEmail],
-    [cUser.fPassword] : req.body[cUser.fPassword],
-    [cUser.fUserType_id] : req.body[cUser.fUserType_id]
+    [cThis.fName] : req.body[cThis.fName],
+    [cThis.fEmail] : req.body[cThis.fEmail],
+    [cThis.fPassword] : req.body[cThis.fPassword],
+    [cThis.fUserType_id] : req.body[cThis.fUserType_id]
   });
 
-  User.addUser(newUser,(err, doc) => {
+  User.add(newUser,(err, doc) => {
     if (err) {
-      msg = cMess.mText(cMess.mCode.CR_ERR, cUser.coll);
+      msg = f.getErrorMessage(err,cThis);
       dlog.db3(msg);
       dlog.e(err);
 
+      //FIXME err (when bcrypt not mongoose error)
+      // is empty when send back as a json object
+      // it prints fine when just logging it
       res.json({success: false,
                 msg: msg,
                 errMsg: err})
     } else {
-      msg = cMess.mText(cMess.mCode.CR_SUCC, cUser.coll);
+      msg = cMess.mText(cMess.mCode.CR_SUCC, cThis.coll);
       dlog.db3(msg);
       dlog.l2(log.js(doc));
       res.json({success: true,
@@ -82,16 +85,16 @@ router.post('/register',(req,res,next) => {
 })
 
 // Authenticate
-router.post('/authenticate',(req,res,next) => {
-  dlog.http('/authenticate');
+router.post('/auth',(req,res,next) => {
+  dlog.http(req.method + ' ' + req.originalUrl);
   dlog.http2(log.js(req.body));
 
-  const fEmail= req.body[cUser.fEmail];
-  const fPassword = req.body[cUser.fPassword];
+  const fEmail= req.body[cThis.fEmail];
+  const fPassword = req.body[cThis.fPassword];
 
-  User.getUserByEmail(fEmail, (err,user) => {
+  User.getByEmail(fEmail, (err,user) => {
     if (err) {
-      msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll, cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.READ_FAIL, cThis.coll, cThis.fEmail);
       dlog.db3(msg);
       dlog.e(err);
 
@@ -100,23 +103,22 @@ router.post('/authenticate',(req,res,next) => {
                 errMsg: err})
     }
     else if (!user) {
-      msg = cMess.mText(cMess.mCode.READ_FAIL, cUser.coll, cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.READ_FAIL, cThis.coll, cThis.fEmail);
       dlog.db2(msg);
 
-      msg = cMess.mText(cMess.mCode.INCORRECT_CREDENTIALS,
-                              cUser.fEmail);
+      msg = cMess.mText(cMess.mCode.CRED_FAIL, cThis.fEmail);
       dlog.db2(msg);
 
       res.json({success: false,
                 msg: msg,
                 errMsg: ""})
     } else {
-      User.comparePassword(fPassword, user[cUser.fPassword], (err,isMatch) => {
+      User.comparePassword(fPassword, user[cThis.fPassword], (err,isMatch) => {
         if ( err ) {
-          // TODO_FA Stringify isn't working on err, seems like the contents (looks like a stack trace)
-          // messes it up
           // test by providing no password
           //TODO_FA err is not getting populated in the res msg below
+          // it does get printed in logging
+          // issue when being sent as a json string?
           msg = cMess.mText(cMess.mCode.CMP_PASS_ERR, err);
           dlog.w(msg);
           dlog.e(err);
@@ -125,26 +127,27 @@ router.post('/authenticate',(req,res,next) => {
                     msg: msg,
                     errMsg: err});
         } else if (isMatch) {
-        //    const token = jwt.sign({data:user}, config.secret, {
-        //       expiresIn: 604800 // 1 week worth of seconds
-        //});
-         // res.json({
-         //   success: true,
-         //   //token: 'JWT ' + token,
-         //   user: {
-         //   id: user._id,
-         //   name: user.name,
-         //   email: user.email
-         //   }
-          msg = cMess.mText(cMess.mCode.CORRECT_CREDENTIALS,
-                                  cUser.coll);
-          dlog.db2(msg);
-          res.json({success: true,
-                    msg: msg,
-                    doc: user});
+          //    const token = jwt.sign({data:user}, config.secret, {
+          //       expiresIn: 604800 // 1 week worth of seconds
+          //});
+          // res.json({
+           //   success: true,
+           //   //token: 'JWT ' + token,
+           //   user: {
+           //   id: user._id,
+           //   name: user.name,
+           //   email: user.email
+           //   }
+            msg = cMess.mText(cMess.mCode.CRED_SUCC,
+                                    cThis.coll);
+            dlog.db2(msg);
+            res.json({success: true,
+                      msg: msg,
+                      doc: user});
           } else {
-            msg = cMess.mText(cMess.mCode.INCORRECT_CREDENTIALS,
-                                    cUser.fPassword);
+            msg = cMess.mText(cMess.mCode.CRED_FAIL,
+                                    cThis.fPassword);
+            dlog.w(msg);
             res.json({success: false,
                       msg: msg,
                       errMsg: ""})
