@@ -5,6 +5,9 @@ var cDb= require('../constants/dbConsts');
 var cThis = cDb.user;
 var cMess = require('../constants/messages.js');
 var f = require('../lib/helperFunc');
+const fkCheck = require('../models/dbHelperFunc').fkCheck;
+var v = require('./validation');
+const { check, validationResult } = require('express-validator');
 
 const express = require('express');
 const router = express.Router();
@@ -50,9 +53,33 @@ router.get('/all', (req,res) => {
 });
 
 // Register
-router.post('/register',(req,res,next) => {
+router.post('/register',
+  [
+    check([cThis.fName, cThis.fPassword], (value, { req, location, path}) => {
+      return cMess.mText(cMess.mCode.ERR_FIELD_REQUIRED, path);
+    }).
+      trim().
+      exists({checkFalsy: true}),
+    check(cThis.fEmail,
+      cMess.mText(cMess.mCode.ERR_FIELD_INVALID, cThis.fEmail)).
+      trim().
+      isEmail(),
+    check(cThis.fUserType_id).
+      trim().
+      custom( value => {
+        return fkCheck(cDb.userType.model, cDb.userType.fId, value, true);
+      })
+
+  ],
+  (req,res,next) => {
   dlog.http(req.method + ' ' + req.originalUrl);
   dlog.http2('body: '+ log.js(req.body));
+
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    dlog.e(cMess.mText(cMess.mCode.ERR_REQ_VALIDATION, log.js(errors.array())));
+    return res.status(422).json({ errors: errors.array() })
+  }
 
   let newUser = new User({
     [cThis.fName] : req.body[cThis.fName],

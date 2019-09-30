@@ -1,5 +1,5 @@
 //FARI
-App crashes if body has incorrect JSON
+App crashes if body has incorrect JSON //DONE
       body-parser:json parse json +1ms
       finalhandler default 400 +0ms
     SyntaxError: Unexpected token } in JSON at position 53

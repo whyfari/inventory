@@ -25,7 +25,7 @@ POST http://{{host}}/users/register
 content-type: {{contentType}}
 
 {
-  "name": "fari",
+  "name": "Fari ",
   "email": "whyfari@gmail.com",
   "password": "a",
   "userType_id" : "5d8f6fc6ac2eb713d1b48d0d"

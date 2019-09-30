@@ -1,6 +1,6 @@
 var logNameSpace = 'M.user';
 var dlog = require('../lib/debuggers')(logNameSpace);
-const FKValidator = require('./helpers/foreign-key-helper');
+const fkCheck = require('./dbHelperFunc').fkCheck;
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -37,7 +37,7 @@ const UserSchema = schema({
 
     validate: {
       validator: function(v) {
-        return FKValidator(consts.userType.model, consts.userType.fId, v,true);
+        return fkCheck (consts.userType.model, consts.userType.fId, v,true);
       },
       // WHY doesn't get hit
       message: 'UserType does not exist'

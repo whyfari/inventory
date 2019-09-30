@@ -37,8 +37,8 @@ var customLevel = '-*user:*';
 //debug.enable( customLevel);
 
 // default
-debug.enable(def);
+//debug.enable(def);
 
 
 //current
-//debug.enable('* -*exp*');
+debug.enable('* -*exp*');

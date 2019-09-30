@@ -37,9 +37,6 @@ let getErrorMessage = (err, cThis, type) => {
   return msg;
 }
 
-let getAll= (cThis, type) => {
-
 module.exports = {
   jsIsEmpty: jsIsEmpty, jsLen, getErrorMessage,
 }
-

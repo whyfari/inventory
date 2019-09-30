@@ -8,28 +8,34 @@ const mCode = {
 // 20 - 60  data-base
 // 60 - 100
 
-  SERVER_START:            1,
-  DB_CONN_SUCC:            2,
-  DB_CONN_FAIL:            3,
-  ROOT_ROUTE:              4,
+  SERVER_START:                    1,
+  DB_CONN_SUCC:                    2,
+  DB_CONN_FAIL:                    3,
+  ROOT_ROUTE:                      4,
 
-  READ_SUCC :              20,
-  READ_FAIL :              21,
-  READ_ERR:                22,
-  READ_NONE:               23,
+  READ_SUCC :                      20,
+  READ_FAIL :                      21,
+  READ_ERR:                        22,
+  READ_NONE:                       23,
 
-  DEL_SUCC :               24,
-  DEL_FAIL :               25,
-  DEL_ERR:                 26,
-  CR_SUCC :                27,
-  CR_FAIL:                 28,
-  CR_ERR:                  29,
-  ERR_DB_DUP:              30,
-  ERR_DB_VALIDATE:         31,
+  DEL_SUCC :                       24,
+  DEL_FAIL :                       25,
+  DEL_ERR:                         26,
+  CR_SUCC :                        27,
+  CR_FAIL:                         28,
+  CR_ERR:                          29,
+  ERR_DB_DUP:                      30,
+  ERR_DB_VALIDATE:                 31,
+  ERR_FK_DNE:                      32,
+  ERR_FK_REF_EXISTS:               33,
 
-  CMP_PASS_ERR:            61,
-  CRED_FAIL:               62,
-  CRED_SUCC:               63,
+  CMP_PASS_ERR:                    61,
+  CRED_FAIL:                       62,
+  CRED_SUCC:                       63,
+  ERR_REQ_VALIDATION:              64,
+  ERR_FIELD_REQUIRED:              65,
+  ERR_FIELD_INVALID:               66,
+  ERR_FIELD_NOT_ID:                67,
 }
 
 module.exports = mCode;
@@ -103,6 +109,28 @@ var mText = function ( messageCode) {
 
     case mCode.CRED_SUCC:
       mes = 'Correct credentials'
+      break;
+
+    case mCode.ERR_REQ_VALIDATION:
+      mes = 'Errors while validation req body: ' + '\'' + arguments[1] + '\'';
+      break;
+
+    case mCode.ERR_FIELD_REQUIRED:
+      mes = '\'' + arguments[1] + '\' is required';
+      break;
+
+    case mCode.ERR_FIELD_INVALID:
+      mes = '\'' + arguments[1] + '\' is invalid or missing';
+      break;
+
+    case mCode.ERR_FK_DNE:
+      mes = 'Foreign key look up failed for field  \'' + arguments[1] +
+        '\' : \'' + arguments[2] + '\' on table \'' + arguments[3] + '\'';
+      break;
+
+    case mCode.ERR_FK_REF_EXISTS:
+      mes = 'Foreign key \'' + arguments[1] + '\' : \'' + arguments[2] +
+        '\' on table \'' + arguments[3] + '\' is being referenced somewhere';
       break;
 
     default:
