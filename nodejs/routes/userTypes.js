@@ -2,23 +2,21 @@ var logNameSpace = 'R.userTypes';
 var dlog = require('../lib/debuggers')(logNameSpace);
 var log = require('../lib/log');
 var f = require('../lib/helperFunc');
+const dbF= require('../models/dbHelperFunc');
+const cHttp= require('../constants/consts').cHttp;
 var cDb= require('../constants/dbConsts');
 var cThis = cDb.userType;
 var cMess = require('../constants/messages.js');
 
 const express = require('express');
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
 //const passport = require('passport');
 //const jwt = require('jsonwebtoken');
 
 const UserType = require('../models/userType');
 
-// localhost:<PORT>/userTypes/<...>
-
-// GET => localhost:<PORT>/userTypes/
 router.get('/all', (req,res) => {
-  dlog.http(req.method + ' ' + req.originalUrl);
-
   UserType.getAll((err,docs) => {
     if (err) {
       msg = cMess.mText(cMess.mCode.READ_ERR, cThis.coll);
@@ -47,14 +45,28 @@ router.get('/all', (req,res) => {
   });
 });
 
-// Register
-//TODO_FA confirm user dne, email unique should already work but jic?
-router.post('/add',(req,res,next) => {
-  dlog.http(req.method + ' ' + req.originalUrl);
-  dlog.http(req.method + ' ' + req.url);
+router.post('/add',
+  [
+    check(cThis.fCode, (value, { req, location, path}) => {
+      return cMess.mText(cMess.mCode.ERR_FIELD_REQUIRED, path);
+    }).
+      trim().
+      exists({checkFalsy: true}).
+      custom( value => {
+        return dbF.checkDbField(cThis.model,cThis.fCode,cThis.fCode, value, false, false);
+      })
+  ],
+  (req,res,next) => {
+
   dlog.http2('body: ' + log.js(req.body));
 
-  fCode = 'code';
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    dlog.e(cMess.mText(cMess.mCode.ERR_REQ_VALIDATION, log.js(errors.array())));
+
+    res.status(cHttp.Unprocessable);
+    return res.json({ errors: errors.array() })
+  }
 
   let newUserType = new UserType({
     [cThis.fCode] : req.body[cThis.fCode],
@@ -68,6 +80,7 @@ router.post('/add',(req,res,next) => {
       dlog.db3(msg);
       dlog.e(err);
 
+      res.status(cHttp.IntServerErr);
       res.json({success: false,
                 msg: msg,
                 errMsg: err})

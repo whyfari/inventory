@@ -12,7 +12,7 @@ POST http://{{host}}/usertypes/add HTTP/1.1
 content-type: {{contentType}}
 
 {
-  "code": "ADIN",
+  "code": "ddnll",
   "desc": " ..."
 }
 
@@ -25,8 +25,8 @@ POST http://{{host}}/users/register
 content-type: {{contentType}}
 
 {
-  "name": "Fari ",
-  "email": "whyfari@gmail.com",
+  "name": "fa",
+  "email": "whyfari@gmail.oocom",
   "password": "a",
   "userType_id" : "5d8f6fc6ac2eb713d1b48d0d"
 }

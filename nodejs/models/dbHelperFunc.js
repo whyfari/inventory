@@ -4,45 +4,44 @@ var cMess = require('../constants/messages.js');
 
 const mongoose = require('mongoose');
 
-let fkCheck = (fModelName, fFieldName, localFieldValue, shouldExist) => {
+let checkDbField = (rModelName, rFieldName, lFieldName, fieldValue, shouldExist, verboseMessage = true ) => {
 
-	dlog.fb('ForeignKey: model:' ,fModelName, 'ffield: ', fFieldName, ' local: ', localFieldValue, ' exist?: ', shouldExist );
+	dlog.fb('checkField: model:' , rModelName, 'rField: ', rFieldName, 'lField', lFieldName, ' value: ', fieldValue, ' exist?: ', shouldExist );
 
-	var model = mongoose.model(fModelName);
+	var model = mongoose.model(rModelName);
 
 	return new Promise((resolve, reject) => {
 
-    // trying to add an object for which the foreign key DNE
-    if ( shouldExist ) {
-      model.findOne({ [fFieldName]: localFieldValue }, (err, result) => {
+    model.findOne({ [rFieldName]: fieldValue }, (err, result) => {
+      if ( shouldExist && result || !shouldExist && !result ) {
+        return resolve(true);
+      } else {
+        if ( shouldExist ) {
+          let msg = cMess.mText(cMess.mCode.ERR_FIELD_VALUE_DNE,
+                                rFieldName,
+                                lFieldName,
+                                fieldValue,
+                                rModelName,
+                                verboseMessage);
+          return reject(new Error(msg));
+
+        } else {
+          let msg = cMess.mText(cMess.mCode.ERR_FIELD_VALUE_EXISTS,
+                                rFieldName,
+                                lFieldName,
+                                fieldValue,
+                                rModelName,
+                                verboseMessage);
+          return reject(new Error(msg));
+        }
+      }
+
         if ( result ) {
-          return resolve(true);
         }
         else {
-          dlog.f('why',cMess.mCode.ERR_FK_DNE)
-          let msg = cMess.mText(cMess.mCode.ERR_FK_DNE,
-                                fFieldName,
-                                localFieldValue,
-                                fModelName);
-          return reject(new Error(msg));
         }
-      });
-    } else {
-    // removing an object which is a foreign key for an existing object
-      model.findOne({ [fFieldName]: localFieldValue }, (err, result) => {
-        if ( !result ) {
-          return resolve(true);
-        }
-        else {
-          let msg = cMess.mText(cMess.mCode.ERR_FK_REF_EXISTS,
-                                fFieldName,
-                                localFieldValue,
-                                fModelName);
-          return reject(new Error(msg));
-        }
-      });
-    }
-  });
+    });
+  })
 }
 
-module.exports = { fkCheck };
+module.exports = { checkDbField };

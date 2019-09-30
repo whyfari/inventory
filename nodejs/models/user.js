@@ -1,6 +1,6 @@
 var logNameSpace = 'M.user';
 var dlog = require('../lib/debuggers')(logNameSpace);
-const fkCheck = require('./dbHelperFunc').fkCheck;
+const checkDbField = require('./dbHelperFunc').checkDbField;
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -37,7 +37,7 @@ const UserSchema = schema({
 
     validate: {
       validator: function(v) {
-        return fkCheck (consts.userType.model, consts.userType.fId, v,true);
+        return checkDbField(consts.userType.model, consts.userType.fId, cThis.fUserType_id, v,true);
       },
       // WHY doesn't get hit
       message: 'UserType does not exist'
@@ -61,7 +61,6 @@ module.exports.getById = function (id, callback) {
   User.findById(id,callback);
 }
 
-//TODO_FA this should only return one record since email should be unique
 module.exports.getByEmail = function (email, callback) {
   dlog.fb('getByEmail');
   User.findOne({[cThis.fEmail] : email},callback);

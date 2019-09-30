@@ -3,6 +3,7 @@ var logNameSpace = 'app';
 var dlog = require('./lib/debuggers')(logNameSpace);
 var cMes= require('./constants').mes;
 var cApp= require('./constants').consts.app;
+const cHttp= require('./constants/consts').cHttp;
 
 
 dlog.e('ERROR test');
@@ -28,25 +29,38 @@ var app = express();
 //TODO remove
 //app.use(expressValidator()) // deprecated in v6
 
+app.use(function timeLog(req,res,next) {
+
+  let today= new Date();
+  dlog.l(today.toLocaleString());
+  dlog.http(req.method + ' ' + req.originalUrl);
+  next();
+})
+
 //app.use(cors({ origin: `http://localhost:${portAngular}` }));
 app.use(cors());
 app.use(bodyParser.json());
 
+
 app.use((err, req, res, next) => {
+  dlog.http('basee', req.method + ' ' + req.originalUrl);
   if (err) {
-    dlog.e('Invalid Request data')
+    res.status(cHttp.BadReq);
+    dlog.e('..Invalid Request data')
     res.send('Invalid Request data')
   } else {
+    dlog.http('base', req.method + ' ' + req.originalUrl);
     next()
   }
+})
+
+app.get('/', (req,res) => {
+  res.send('_FA_ Inventory app backend root');
 })
 
 app.use('/users',users);
 app.use('/userTypes',userTypes);
 
-app.get('/', (req,res) => {
-  res.send('_FA_ Iventory app backend root');
-})
 
 
 app.listen(cApp.port, () => {

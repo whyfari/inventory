@@ -4,7 +4,7 @@ const app = {
   hostAngular : "localhost"
 }
 
-const hc = {
+const cHttp= {
 /*
   Informational responses (100–199),
   Successful responses (200–299),
@@ -13,9 +13,11 @@ const hc = {
   and Server errors (500–599)
 */
 
+  Cont: 100,               // Continue
+
   OK : 200,                // ok
-  Cre: 201,                // created, for POST/PUT
-  Acc: 202,                // accepted (but not acted on yet)
+  Created: 201,            // created, for POST/PUT
+  Accepted: 202,           // accepted (but not acted on yet)
   NoCont: 204,             // no content
   ResetCont: 205,          // reset content
   PartCont: 206,           // partial content
@@ -29,6 +31,7 @@ const hc = {
   Conflict: 409,           // req not processed; conflict in state of resource
   Gone : 410,              // content has been permanently deleted
   TeaPot : 418,            // I'm a teapot
+  Unprocessable: 422,      // Unprocessable entity
   Locked: 423,             // resource being accessed is locked
   TooManyReq: 429,         // too many requests in given amount of time
 
@@ -39,4 +42,4 @@ const hc = {
 
 }
 
-module.exports = {app};
+module.exports = {app, cHttp};

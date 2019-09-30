@@ -26,8 +26,8 @@ const mCode = {
   CR_ERR:                          29,
   ERR_DB_DUP:                      30,
   ERR_DB_VALIDATE:                 31,
-  ERR_FK_DNE:                      32,
-  ERR_FK_REF_EXISTS:               33,
+  ERR_FIELD_VALUE_DNE:             32,
+  ERR_FIELD_VALUE_EXISTS:          33,
 
   CMP_PASS_ERR:                    61,
   CRED_FAIL:                       62,
@@ -123,14 +123,24 @@ var mText = function ( messageCode) {
       mes = '\'' + arguments[1] + '\' is invalid or missing';
       break;
 
-    case mCode.ERR_FK_DNE:
-      mes = 'Foreign key look up failed for field  \'' + arguments[1] +
-        '\' : \'' + arguments[2] + '\' on table \'' + arguments[3] + '\'';
+    case mCode.ERR_FIELD_VALUE_DNE:
+      if ( arguments[5] == true ) {
+        mes = 'Reference field \'' + arguments[1] + '\'(\'' + arguments[2] +
+          '\') with value \'' + arguments[3] + '\' on table \'' + arguments[4] +
+          '\' not found';
+      } else {
+        mes = '\'' + arguments[2] + '\':\'' + arguments[3] + '\' does not exist';
+      }
       break;
 
-    case mCode.ERR_FK_REF_EXISTS:
-      mes = 'Foreign key \'' + arguments[1] + '\' : \'' + arguments[2] +
-        '\' on table \'' + arguments[3] + '\' is being referenced somewhere';
+    case mCode.ERR_FIELD_VALUE_EXISTS:
+      if ( arguments[5] == true ) {
+        mes = 'Field \'' + arguments[1] + '\':(\'' + arguments[2] +
+          '\') with value \'' + arguments[3] + '\' on table \'' + arguments[4] +
+          '\' already exists';
+      } else {
+        mes = '\'' + arguments[2] + '\':\'' + arguments[3] + '\' is already in use';
+      }
       break;
 
     default:
