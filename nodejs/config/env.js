@@ -1,5 +1,10 @@
 process.env.PORT_NJS_INVENTORY = 3000;
-process.env.HOST_NJS_INVENTORY = '172.23.59.158';
+
+//process.env.HOST_NJS_INVENTORY = 'localhost';
+// when running on wsl ubuntu, localhost would have issues
+// for the first message sometimes
+// so get the ip from : `ip addr` grep for eth0`
+process.env.HOST_NJS_INVENTORY = '172.28.144.103';
 
 // set debugging levels using env variables ... not working
 //process.env.DEBUG= '*-R.userTypes:db, -nodemon*, -express*';
@@ -38,7 +43,6 @@ var customLevel = '-*user:*';
 
 // default
 //debug.enable(def);
-
 
 //current
 debug.enable('* -*exp*');

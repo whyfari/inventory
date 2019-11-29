@@ -1,3 +1,7 @@
+// env variables being set in here aren't being used
+// had to make sure they were set in the actual enviroment
+require ('../config/env)
+
 // INFO need an empty line after the POST * line and before the {} for the JSON message
 @hostname = {{$processEnv HOST_NJS_INVENTORY }}
 @port = {{$processEnv PORT_NJS_INVENTORY }}
@@ -5,14 +9,16 @@
 @contentType = application/json
 
 ###
-GET http://{{host}}/usertypes/all
+// testing with explicit ip/port
+GET http://172.28.144.103:3000/usertypes/all
+//GET http://{{host}}/usertypes/all
 
 ###
 POST http://{{host}}/usertypes/add HTTP/1.1
 content-type: {{contentType}}
 
 {
-  "code": "ddnll",
+  "code": "UddSER2",
   "desc": " ..."
 }
 
@@ -25,17 +31,38 @@ POST http://{{host}}/users/register
 content-type: {{contentType}}
 
 {
-  "name": "fa",
-  "email": "whyfari@gmail.oocom",
-  "password": "a",
-  "userType_id" : "5d8f6fc6ac2eb713d1b48d0d"
+  "name": "b",
+  "email": "b@b.com",
+  "password": "b",
+  "userType_id" : "5d92836cea462d1aeb094730"
 }
 
 ###
-POST http://{{host}}/users/auth
+POST http://{{host}}/users/login
 content-type: {{contentType}}
+Cookie: connect.sid=s%3ATl2E_WuxrZV9RvP2BXdW_eSWrkw8OeJi.rjFEXY28dVtQdKg6z718oMgu2AXwZpFEJNBvNecTFqs; Path=/
 
 {
-  "email": "whyfari@gmail.com",
-  "password": "a"
+  "email": "b@b.com",
+  "password": "b"
+}
+
+###
+POST http://{{host}}/users/logout
+content-type: {{contentType}}
+Cookie: connect.sid=s%3ATl2E_WuxrZV9RvP2BXdW_eSWrkw8OeJi.rjFEXY28dVtQdKg6z718oMgu2AXwZpFEJNBvNecTFqs; Path=/
+
+{
+  "email": "b@b.com",
+  "name" : "bb"
+}
+
+###
+PUT http://{{host}}/users/edit
+content-type: {{contentType}}
+Cookie: kconnect.sid=s%3AYqvOSw75KmMGZ1nGco-nq9OPelQmkq_X.GKcw9QIoFSwNyDjMX2niIYyMqjgT5u%2FcuhQLJSBfze0; Path=/
+
+{
+  "email": "b@.com",
+  "name": "bb"
 }

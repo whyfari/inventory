@@ -4,6 +4,7 @@ const app = {
   hostAngular : "localhost"
 }
 
+
 const cHttp= {
 /*
   Informational responses (100–199),
@@ -42,4 +43,7 @@ const cHttp= {
 
 }
 
-module.exports = {app, cHttp};
+//TODO_CHANGE to  10
+const saltFactor = 1;
+
+module.exports = {saltFactor, app, cHttp};

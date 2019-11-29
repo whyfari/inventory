@@ -1,12 +1,7 @@
 //FARI
 App crashes if body has incorrect JSON //DONE
-      body-parser:json parse json +1ms
-      finalhandler default 400 +0ms
-    SyntaxError: Unexpected token } in JSON at position 53
-        at JSON.parse (<anonymous>)
-        at parse (/home/fari/code/inventory/nodejs/node_modules/body-parser/lib/types/json.js:89:19)
 
-Logging
+Loging
   Don't send back full doc, it has hashed password
 
 Error handling
@@ -24,9 +19,11 @@ Error handling
 
 DB
    insureIndex
-      check all indexes are created before preceding
-      confirm data integrity? non-unique values check?
-        if unique attribute was added later?
+    check all indexes are created before preceding
+    confirm data integrity? non-unique values check?
+      if unique attribute was added later?
+  reconnect database (if fails on startup)
+  put server down if database is down
 
 
 

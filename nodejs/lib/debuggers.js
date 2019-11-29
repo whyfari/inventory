@@ -24,7 +24,7 @@ module.exports = function ( namespace ) {
 
   var fu = debug(add+'FUNC');                  // function
   var fb = debug(add+'BEG');                   // function beg
-  var fe = debug(add+'ENG');                   // function end
+  var fe = debug(add+'END');                   // function end
 
   var http = debug(add+'HTTP');                // http 1
   var http2 = debug(add+'HTTP:2');             // http 2

@@ -28,6 +28,9 @@ const mCode = {
   ERR_DB_VALIDATE:                 31,
   ERR_FIELD_VALUE_DNE:             32,
   ERR_FIELD_VALUE_EXISTS:          33,
+  UPD_SUCC :                       34,
+  UPD_FAIL:                        35,
+  UPD_ERR:                         36,
 
   CMP_PASS_ERR:                    61,
   CRED_FAIL:                       62,
@@ -36,6 +39,11 @@ const mCode = {
   ERR_FIELD_REQUIRED:              65,
   ERR_FIELD_INVALID:               66,
   ERR_FIELD_NOT_ID:                67,
+  ERR_ONE_OF:                      68,
+  ERR_MUTUALLY_EXCLUSIVE_FIELDS:   69,
+  LOG_OUT_SUCC:                    70,
+  ERR_NOT_LOGGED_IN:               71,
+  ERR_USER_LEVEL:                  72,
 }
 
 module.exports = mCode;
@@ -94,9 +102,21 @@ var mText = function ( messageCode) {
       mes = 'Duplicate record error on  table \'' + arguments[1] + '\'';
       break;
 
-    case mCode.ER_DB_VALIDATE:
+    case mCode.ERR_DB_VALIDATE:
       mes = 'Got a \'' + cDb.errors.eValidationError + '\' error on table \'' +
         arguments[1] + '\'';
+      break;
+
+    case mCode.UPD_SUCC:
+      mes = 'Record updated on table \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.UPD_FAIL:
+      mes = 'Failed to update record on table \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.UPD_ERR:
+      mes = 'Error while updating record on table \'' + arguments[1] + '\'';
       break;
 
     case mCode.CMP_PASS_ERR:
@@ -141,6 +161,30 @@ var mText = function ( messageCode) {
       } else {
         mes = '\'' + arguments[2] + '\':\'' + arguments[3] + '\' is already in use';
       }
+      break;
+
+    case mCode.ERR_ONE_OF:
+      mes = 'One of the following fields must be provided \'' + arguments[1] + '\'';
+      break
+
+    case mCode.ERR_MUTUALLY_EXCLUSIVE_FIELDS:
+      mes = 'Can not provide both \'' + arguments[1] + '\' and \'' + arguments[2] + '\'';
+      break
+
+    case mCode.LOG_OUT_SUCC:
+      mes = 'Logout successful for \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.ERR_NOT_LOGGED_IN:
+      mes = 'User not logged in for \'' + arguments[1] + '\'';
+      break;
+
+    case mCode.ERR_LOGGED_IN:
+      mes = 'User \'' + arguments[1] + '\' already logged in; Log out first. \'';
+      break;
+
+    case mCode.ERR_USER_LEVEL:
+      mes = 'User\'' + arguments[1] + '\'', 'does not have permission for, \'' + arguments[2] + '\'';
       break;
 
     default:

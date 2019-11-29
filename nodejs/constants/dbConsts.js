@@ -2,7 +2,10 @@ const db = {
   db: "mongodb",
   dbName: "inv",
   port: 27017,
-  host: "localhost"
+  host: "localhost",
+  sessColl: "sessions",
+  secret: 'leSecret'
+
 }
 
 const errors = {
@@ -30,6 +33,7 @@ const user = {
   fName: 'name',
   fEmail: 'email',
   fPassword: 'password',
+  fP: 'p',
   fUserType_id: 'userType_id'
 }
 

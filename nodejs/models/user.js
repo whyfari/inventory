@@ -1,17 +1,13 @@
 var logNameSpace = 'M.user';
 var dlog = require('../lib/debuggers')(logNameSpace);
-const checkDbField = require('./dbHelperFunc').checkDbField;
+const dbF= require('./dbHelperFunc');
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const schema = mongoose.Schema;
 
 const consts= require('../constants/dbConsts');
 const cThis = consts.user;
-
-//TODO_FA change to 10
-const saltWorkFactor = 1;
 
 const UserSchema = schema({
 
@@ -26,6 +22,12 @@ const UserSchema = schema({
     unique: true
   },
 
+  //REMOVE
+  [cThis.fP]: {
+    type: String,
+    required: true
+  },
+
   [cThis.fPassword]: {
     type: String,
     required: true
@@ -37,7 +39,7 @@ const UserSchema = schema({
 
     validate: {
       validator: function(v) {
-        return checkDbField(consts.userType.model, consts.userType.fId, cThis.fUserType_id, v,true);
+        return dbF.checkDbField(consts.userType.model, consts.userType.fId, cThis.fUserType_id, v,true);
       },
       // WHY doesn't get hit
       message: 'UserType does not exist'
@@ -66,35 +68,23 @@ module.exports.getByEmail = function (email, callback) {
   User.findOne({[cThis.fEmail] : email},callback);
 }
 
-module.exports.add = function(newUser,callback){
+module.exports.add = function(newUser, callback){
   dlog.fb('add');
+
+  //REMOVE log
   dlog.dbm('add ...: email: ' + newUser[cThis.fEmail]+ ' pass: ' + newUser[cThis.fPassword]);
 
-  //TODO_FA are we covering all return cases?
-  // TODO_FA 'err' waksn't printed by the callback function eventhough
-  // i did see it in this log. test by not sending a password
-  bcrypt.genSalt(saltWorkFactor, (err,salt) => {
-    bcrypt.hash(newUser[cThis.fPassword], salt, (err, hash) => {
-      if (err) {
-        dlog.e('Error while hashing password: ' + err);
-        callback(err)
-      } else {
+  dbF.getHash( newUser[cThis.fPassword], (err, hash) => {
+
+    if ( err ) {
+        callback(err);
+    } else {
+        //FARI temp storing raw passwords
+        newUser[cThis.fP]=  newUser[cThis.fPassword];
         newUser[cThis.fPassword]= hash;
         dlog.l3('hashed pass: ' + newUser[cThis.fPassword]);
         newUser.save(callback);
-      }
-    });
-  });
-}
-
-module.exports.comparePassword = function(candidatePassword, hash, callback) {
-  //REMOVE remove this log ofc
-  dlog.dbm('comparePassword: ' + candidatePassword + ' == hashed?: ' + hash);
-  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-    if (err) {
-      callback(err,null);
-    } else {
-      callback(null,isMatch);
     }
   });
+
 }

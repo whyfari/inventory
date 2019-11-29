@@ -58,8 +58,6 @@ router.post('/add',
   ],
   (req,res,next) => {
 
-  dlog.http2('body: ' + log.js(req.body));
-
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     dlog.e(cMess.mText(cMess.mCode.ERR_REQ_VALIDATION, log.js(errors.array())));
