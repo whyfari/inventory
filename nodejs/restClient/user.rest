@@ -9,8 +9,13 @@ require ('../config/env)
 @contentType = application/json
 
 ###
-// testing with explicit ip/port
+// testing with explicit ip/port (wsl)
 GET http://172.28.144.103:3000/usertypes/all
+
+// testing with explicit ip/port (windows/wsl)
+GET http://localhost:3000
+
+GET http://localhost:3000/usertypes/all
 //GET http://{{host}}/usertypes/all
 
 ###
